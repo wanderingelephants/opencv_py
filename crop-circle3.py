@@ -1,4 +1,5 @@
 import cv2
+import sys
 import numpy as np
 
 def crop_largest_circle(image_path):
@@ -9,22 +10,28 @@ def crop_largest_circle(image_path):
     height, width = image.shape[:2]
 
     # Define the coordinates for the 4th quadrant (bottom-right quadrant)
-    x_start = width // 2
-    y_start = height // 2
-    x_end = width
-    y_end = height
+    #x_start = width // 2
+    x_start = 850
+    #y_start = height // 2
+    y_start = 1494
+    #x_end = width
+    x_end = 81
+    #y_end = height
+    y_end = 81
 
     # Crop the 4th quadrant
     cropped_quadrant = image[y_start:y_end, x_start:x_end]
 
     # Convert the cropped image to grayscale
-    gray = cv2.cvtColor(cropped_quadrant, cv2.COLOR_BGR2GRAY)
+    #gray = cv2.cvtColor(cropped_quadrant, cv2.COLOR_BGR2GRAY)
 
     # Apply Gaussian blur to reduce noise
-    blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+    #blurred = cv2.GaussianBlur(gray, (5, 5), 0)
 
     # Apply Hough Circle Transform
-    circles = cv2.HoughCircles(blurred, cv2.HOUGH_GRADIENT, dp=1, minDist=20,
+    #circles = cv2.HoughCircles(blurred, cv2.HOUGH_GRADIENT, dp=1, minDist=20,
+    #                           param1=50, param2=30, minRadius=5, maxRadius=100)
+    circles = cv2.HoughCircles(cropped_quadrant, cv2.HOUGH_GRADIENT, dp=1, minDist=20,
                                param1=50, param2=30, minRadius=5, maxRadius=100)
 
     # If circles are found
@@ -47,7 +54,8 @@ def crop_largest_circle(image_path):
         cv2.destroyAllWindows()
 
         # Save the cropped circle to a file (optional)
-        cv2.imwrite("cropped_circle.jpg", cropped_circle)
+        path = image_path.split(".")
+        cv2.imwrite(path[0]+"0"+path[1], cropped_circle)
     else:
         print("No circular figure found in the cropped quadrant.")
 
@@ -55,4 +63,4 @@ def crop_largest_circle(image_path):
 image_path = "input_image.jpg"
 
 # Call the function to find and crop the largest circular figure within the cropped quadrant
-crop_largest_circle(image_path)
+crop_largest_circle(sys.argv[1])
