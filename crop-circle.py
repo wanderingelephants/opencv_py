@@ -22,7 +22,7 @@ def mark_circle():
     
         # Convert the circle parameters a, b and r to integers. 
         detected_circles = np.uint16(np.around(detected_circles)) 
-    
+        i = 0
         for pt in detected_circles[0, :]: 
             a, b, r = pt[0], pt[1], pt[2] 
     
@@ -37,9 +37,14 @@ def mark_circle():
             cv2.waitKey(0) 
 
             # Return circle boundary
-            return (a,b,r)
 
-def crop_circle(image_path, circle):
+            #crop_circle("yokohama-"+str(i)+".jpg",(a,b,r))
+            crop_circle(sys.argv[1],(a,b,r),i)
+            i = i + 1
+#            return (a,b,r)
+
+def crop_circle(image_path, circle, index):
+    print("Going to crop:",circle[0],circle[1],circle[2])
     # Load the image
     image = cv2.imread(image_path)
 
@@ -71,11 +76,13 @@ def crop_circle(image_path, circle):
     cv2.destroyAllWindows()
 
     # Save the cropped circle to a file (optional)
-    cv2.imwrite("cropped_circle.jpg", cropped_circle)
+    cv2.imwrite("yokohama-"+str(index)+".jpg", cropped_circle)
 
 # Call the function to crop the circle within the cropped quadrant
 
-circle = mark_circle()
+#circle = mark_circle()
 
-crop_circle(sys.argv[1], circle)
+#crop_circle(sys.argv[1], circle)
+
+mark_circle()
 
