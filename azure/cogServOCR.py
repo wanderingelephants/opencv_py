@@ -116,7 +116,7 @@ for blob in blobs_list:
     text_result = extract_text_dimag(url, endpoint, credentials)
     
     dateFound = False
-    date_extract_pattern = "[0-9]{2}[-|\/]{1}[0-9]{1}[-|\/]{1}[0-9]{2}"
+    date_extract_pattern = "[0-9]{1,2}[-|\/]{1}[0-9]{1,2}[-|\/]{1}[0-9]{2}"
     for line in text_result:
         dateVal = re.search(date_extract_pattern, line)
         if dateVal is not None:
