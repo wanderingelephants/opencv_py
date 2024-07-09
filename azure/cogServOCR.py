@@ -11,6 +11,7 @@ import os
 from azure.storage.blob import BlobClient
 from azure.storage.blob import ContentSettings
 import msrest
+import re
 
 
 
@@ -41,9 +42,9 @@ def extract_text_dimag(url, endpoint, credentials):
         for text_result in read_result.analyze_result.read_results:
             out = []
             for line in text_result.lines:
-                print(line.text)
+                #print(line.text)
                 out.append(line.text)
-                print(line.bounding_box)
+                #print(line.bounding_box)
                 
     return out
 
@@ -113,4 +114,14 @@ for blob in blobs_list:
     url = f"https://{STORAGE_ACCOUNT_NAME}.blob.core.windows.net/{CONTAINER_NAME}/{blob.name}"
     
     text_result = extract_text_dimag(url, endpoint, credentials)
-    print(text_result)
+    
+    dateFound = False
+    date_extract_pattern = "[0-9]{2}[-|\/]{1}[0-9]{1}[-|\/]{1}[0-9]{2}"
+    for line in text_result:
+        dateVal = re.search(date_extract_pattern, line)
+        if dateVal is not None:
+            dateFound = True
+            print(dateVal.group())
+
+    if dateFound == False:
+        print("Date not found")
